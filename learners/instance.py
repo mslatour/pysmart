@@ -23,7 +23,7 @@ class KNearestNeighbor:
     for row in self.data:
       dist = 0;
       for col in range(len(instance)):
-        dist += abs(int(row[self.cols[col]]) - int(instance[col]))
+        dist += abs(row[self.cols[col]] - instance[col])
       neighbors.append((dist, row[self.class_index]))
     # Sort neighbors on their distance
     neighbors = sorted(neighbors, key=itemgetter(0))

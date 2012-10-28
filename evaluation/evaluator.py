@@ -26,6 +26,14 @@ class BasicEvaluator:
   def get_confusion_matrix(self):
     return self.cmatrix
 
+  def print_confusion_matrix(self):
+    for r in range(len(self.cmatrix)):
+      row = str(self.classes[r])
+      for c in range(len(self.cmatrix[r])):
+        row += " | "+str(self.cmatrix[r][c])
+      print row
+      print "-"*len(row)
+
   def accuracy(self):
     c = self.cmatrix
     return (c[0][0]+c[1][1])/float(sum(c[0])+sum(c[1]))

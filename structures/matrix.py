@@ -2,7 +2,11 @@ class Matrix2D:
   data = []
   rows = 0
   cols = 0
-
+  
+  @staticmethod
+  def genmat(r,c, val=None):
+    return Matrix2D([[val for col in range(c)] for row in range(r)])
+    
   def __init__(self, raw):
     self.data = raw
     self.rows = len(raw)
@@ -11,7 +15,7 @@ class Matrix2D:
 
   def vslice(self, indices):
     indices_len = len(indices)
-    sliced = [[None for col in range(indices_len)] for row in range(self.rows)]
+    sliced = Matrix2D.genmat(self.rows, indices_len, None).get_raw()
     for row in range(self.rows):
       for col in range(indices_len):
         sliced[row][col] = self.data[row][indices[col]]
@@ -27,11 +31,14 @@ class Matrix2D:
         ind = range(ind.start, ind.stop, ind.step)
 
     ind_len = len(ind)
-    sliced = [[None for col in range(self.cols)] for row in range(ind_len)]
+    sliced = Matrix2D.genmat(ind_len, self.cols, None).get_raw()
     for row in range(ind_len):
       for col in range(self.cols):
         sliced[row][col] = self.data[ind[row]][col]
     return Matrix2D(sliced)
+
+  def __setitem__(self, key, value):
+    self.data[key] = value
 
   def __len__(self):
     return self.rows
@@ -55,6 +62,10 @@ class Matrix2D:
     return self.data
 
 class Vector(Matrix2D):
+  @staticmethod
+  def genmat(c, val=None):
+    return Vector([val for col in range(c)])
+
   def __init__(self, raw):
     Matrix2D.__init__(self, [raw])
  
@@ -68,10 +79,16 @@ class Vector(Matrix2D):
         ind = range(ind.start, ind.stop, ind.step)
     
     ind_len = len(ind)
-    sliced = [None for row in range(ind_len)]
+    sliced = Vector.genmat(ind_len).get_raw()
     for col in range(ind_len):
       sliced[col] = self.data[0][ind[col]]
     return Vector(sliced)
+  
+  def __setitem__(self, key, value):
+    self.data[0][key] = value
+
+  def get_raw(self):
+    return self.data[0]
 
   def __len__(self):
     return self.cols
