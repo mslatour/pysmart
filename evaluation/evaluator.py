@@ -1,39 +1,48 @@
-class BasicEvaluator:
+class ConfusionMatrix:
+  _classes = []
+  _matrix = []
+  _c_len = []
+  def __init__(self, classes):
+    self._classes = classes
+    self._c_len = len(classes)
+    self._matrix = [[0 for c in range(self._c_len)] for r in range(self._c_len)]
+
+  def set(self, r, c):
+    self_matrix[self._classes.index(r)][self._classes.index(c)] += 1
+
+  def accuracy(self):
+    c = self._matrix
+    return (c[0][0]+c[1][1])/float(sum(c[0])+sum(c[1]))
+  
+  def __str__(self):
+    for r in range(len(self._matrix)):
+      row = str(self._classes[r])
+      for c in range(len(self._matrix[r])):
+        row += " | "+str(self._matrix[r][c])
+      print row
+      print "-"*len(row)
+  
+class BasicTestsetEvaluator:
   # Confusion matrix
   cmatrix = []
   classes = []
   c_len = 0
 
-  def __init__(self, classes):
+  def __init__(self, classes, testset, class_index):
     c_len = len(classes)
     self.cmatrix = [[0 for col in range(c_len)] for row in range(c_len)]
     self.classes = classes
     self.c_len = c_len
+    self.testset = testset
+    self.class_index = class_index
 
-  def evaluate_by_testset(self, classifier, testset, class_index):
-    self.clear_confusion_matrix()
-    if len(testset) > 0:
-      indices = range(len(testset[0]))
-      indices.remove(class_index)
-      for instance in testset:
+  def evaluate(self, classifier):
+    cmatrix = ConfusionMatrix(self.classes)
+    if len(self.testset) > 0:
+      indices = range(len(self.testset[0]))
+      indices.remove(self.class_index)
+      for instance in self.testset:
         c = self.classes.index(classifier.classify(instance[indices]))
-        r = self.classes.index(instance[class_index])
-        self.cmatrix[r][c] += 1
-  
-  def clear_confusion_matrix(self):
-    self.cmatrix = [[0 for col in range(self.c_len)] for row in range(self.c_len)]
-
-  def get_confusion_matrix(self):
-    return self.cmatrix
-
-  def print_confusion_matrix(self):
-    for r in range(len(self.cmatrix)):
-      row = str(self.classes[r])
-      for c in range(len(self.cmatrix[r])):
-        row += " | "+str(self.cmatrix[r][c])
-      print row
-      print "-"*len(row)
-
-  def accuracy(self):
-    c = self.cmatrix
-    return (c[0][0]+c[1][1])/float(sum(c[0])+sum(c[1]))
+        r = self.classes.index(instance[self.class_index])
+        cmatrix.set(r,c)
+    return cmatrix
