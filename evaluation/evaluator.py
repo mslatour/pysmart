@@ -8,19 +8,21 @@ class ConfusionMatrix:
     self._matrix = [[0 for c in range(self._c_len)] for r in range(self._c_len)]
 
   def set(self, r, c):
-    self_matrix[self._classes.index(r)][self._classes.index(c)] += 1
+    self._matrix[self._classes.index(r)][self._classes.index(c)] += 1
 
   def accuracy(self):
     c = self._matrix
     return (c[0][0]+c[1][1])/float(sum(c[0])+sum(c[1]))
   
   def __str__(self):
+    string = ""
     for r in range(len(self._matrix)):
       row = str(self._classes[r])
       for c in range(len(self._matrix[r])):
         row += " | "+str(self._matrix[r][c])
-      print row
-      print "-"*len(row)
+      string += row + "\n"
+      string += "-"*len(row) + "\n"
+    return string
   
 class BasicTestsetEvaluator:
   # Confusion matrix
@@ -42,7 +44,8 @@ class BasicTestsetEvaluator:
       indices = range(len(self.testset[0]))
       indices.remove(self.class_index)
       for instance in self.testset:
-        c = self.classes.index(classifier.classify(instance[indices]))
-        r = self.classes.index(instance[self.class_index])
-        cmatrix.set(r,c)
+        cmatrix.set( \
+          instance[self.class_index], \
+          classifier.classify(instance[indices])
+        )
     return cmatrix
