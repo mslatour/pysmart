@@ -12,6 +12,9 @@ class KNearestNeighbor:
     self.k = k
     self.weighted = weighted
 
+  def __str__(self):
+    return str(self.k)+"-Nearest Neighbour classifier"
+
   def train(self, data, class_index):
     self.data = data
     self.cols = range(len(data[0]))

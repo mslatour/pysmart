@@ -39,6 +39,7 @@ class BasicTestsetEvaluator:
     self.class_index = class_index
 
   def evaluate(self, classifier):
+    print "Evaluating %s with test set" % (classifier,)
     cmatrix = ConfusionMatrix(self.classes)
     if len(self.testset) > 0:
       indices = range(len(self.testset[0]))
@@ -49,3 +50,16 @@ class BasicTestsetEvaluator:
           classifier.classify(instance[indices])
         )
     return cmatrix
+
+class MultipleEvaluator:
+  _evaluator = None
+
+  def __init__(self, evaluator):
+    self._evaluator = evaluator
+
+  def evaluate(self, classifiers):
+    l = len(classifiers)
+    results = [None for c in range(l)]
+    for c in range(l):
+      results[c] = self._evaluator.evaluate(classifiers[c])
+    return results

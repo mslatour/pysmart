@@ -21,7 +21,6 @@ class BinaryThresholdNode(Node):
   def __init__(self, feature, threshold):
     self.feature = feature
     self.threshold = threshold
-    print self.feature, '<=', self.threshold
 
   def apply(self, instance):
     if instance[self.feature] <= self.threshold:
@@ -97,6 +96,9 @@ class Tree:
 
 class DecisionStump(Tree):
 
+  def __str__(self):
+    return "DecisionStump classifier"
+
   def train(self, data, class_index):
     self.class_index = class_index
     size = data.size()
@@ -108,7 +110,6 @@ class DecisionStump(Tree):
     best_feature = None
     for feature in features:
       if type(data[0][feature]) == type(0) or type(data[0][feature]) == type(0.0):
-        print "finding splits on",feature
         split = self._find_binary_threshold(data,class_index,feature)
 
         if split[0] < min_score:
