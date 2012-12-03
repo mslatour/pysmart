@@ -13,7 +13,21 @@ class ConfusionMatrix:
   def accuracy(self):
     c = self._matrix
     return (c[0][0]+c[1][1])/float(sum(c[0])+sum(c[1]))
+
+  def recall(self):
+    c = self._matrix
+    return (c[1][1]/float(c[1][1]+c[1][0]))
   
+  def precision(self):
+    c = self._matrix
+    return (c[1][1]/float(c[1][1]+c[0][1]))
+  
+  def fmeasure(self):
+    c = self._matrix
+    p = self.precision()
+    r = self.recall()
+    return 2*(p*r)/(p+r)
+
   def __str__(self):
     string = ""
     for r in range(len(self._matrix)):
